@@ -60,7 +60,7 @@ export async function finalizeRequest(requestId: string) {
         where: { requestId },
         select: { id: true }
     })
-    const workerIds = workers.map(w => w.id)
+    const workerIds = workers.map((w: any) => w.id)
 
     // Mark results as published (not draft)
     await prisma.testResult.updateMany({

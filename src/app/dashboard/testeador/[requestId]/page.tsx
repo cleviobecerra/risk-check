@@ -28,7 +28,7 @@ export default async function RequestDetailPage({ params }: PageProps) {
 
     // Calculate progress
     const total = request.workers.length
-    const rated = request.workers.filter(w => w.result?.status).length
+    const rated = request.workers.filter((w: any) => w.result?.status).length
     const progress = Math.round((rated / total) * 100)
 
     return (
@@ -47,7 +47,7 @@ export default async function RequestDetailPage({ params }: PageProps) {
             </div>
 
             <div className="space-y-4">
-                {request.workers.map(worker => (
+                {request.workers.map((worker: any) => (
                     <WorkerCard
                         key={worker.id}
                         worker={worker}
