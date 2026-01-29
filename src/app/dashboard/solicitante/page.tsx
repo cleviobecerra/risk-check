@@ -36,7 +36,7 @@ export default async function SolicitanteDashboard() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {requests.map((req) => (
+                        {requests.map((req: any) => (
                             <TableRow key={req.id} className="hover:bg-slate-50/50">
                                 <TableCell className="font-medium text-slate-900 capitalize">
                                     {format(new Date(req.scheduledFor), "PPP", { locale: es })}

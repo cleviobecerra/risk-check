@@ -194,7 +194,7 @@ export async function getAnalyticsData(filters?: AnalyticsFilters) {
         { name: 'Seguro', value: passed, fill: '#22c55e' },
         { name: 'Inseguro', value: failed, fill: '#ef4444' },
         { name: 'Neutro', value: neutral, fill: '#eab308' },
-    ].filter(i => i.value > 0)
+    ].filter((i: any) => i.value > 0)
 
     // Monthly Trends for Bar Chart
     const trendsMap = new Map<string, { date: string, total: number, safe: number, unsafe: number, neutral: number }>()

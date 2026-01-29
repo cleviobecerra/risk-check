@@ -13,7 +13,7 @@ interface LoginFormProps {
 export function LoginForm({ users }: LoginFormProps) {
     return (
         <div className="grid gap-4">
-            {users.map((user) => (
+            {users.map((user: any) => (
                 <Button
                     key={user.id}
                     variant="outline"
