@@ -78,8 +78,8 @@ export async function getFilterOptions(businessUnit?: string, year?: string, mon
     const days = Array.from(daysSet).map(Number).sort((a, b) => a - b).map(String)
 
     return {
-        businessUnits: units.map(u => u.businessUnit).filter(Boolean),
-        subAreas: areas.map(a => a.subArea).filter(Boolean),
+        businessUnits: units.map((u: any) => u.businessUnit).filter(Boolean),
+        subAreas: areas.map((a: any) => a.subArea).filter(Boolean),
         years,
         months,
         days
@@ -179,15 +179,15 @@ export async function getAnalyticsData(filters?: AnalyticsFilters) {
 
     // Calculate Totals
     const totalProcessed = results.length
-    const historicalCount = results.filter(r => r.isHistorical).length
-    const realResults = results.filter(r => !r.isHistorical)
+    const historicalCount = results.filter((r: any) => r.isHistorical).length
+    const realResults = results.filter((r: any) => !r.isHistorical)
     const realTestsCount = realResults.length
 
     // Pass Rates (Calculated ONLY on REAL tests)
 
-    const passed = realResults.filter(r => r.status === 'SAFE').length
-    const failed = realResults.filter(r => r.status === 'UNSAFE').length
-    const neutral = realResults.filter(r => r.status === 'NEUTRAL').length
+    const passed = realResults.filter((r: any) => r.status === 'SAFE').length
+    const failed = realResults.filter((r: any) => r.status === 'UNSAFE').length
+    const neutral = realResults.filter((r: any) => r.status === 'NEUTRAL').length
 
     // Status Distribution for Pie Chart
     const statusDistribution = [
@@ -199,7 +199,7 @@ export async function getAnalyticsData(filters?: AnalyticsFilters) {
     // Monthly Trends for Bar Chart
     const trendsMap = new Map<string, { date: string, total: number, safe: number, unsafe: number, neutral: number }>()
 
-    realResults.forEach(res => {
+    realResults.forEach((res: any) => {
         const date = new Date(res.worker.testRequest.scheduledFor)
         const key = `${date.getMonth() + 1}/${date.getFullYear()}` // MM/YYYY
 
@@ -224,7 +224,7 @@ export async function getAnalyticsData(filters?: AnalyticsFilters) {
     // Business Unit Stats for Table
     const buStatsMap = new Map<string, { unit: string, safe: number, neutral: number, unsafe: number, total: number }>()
 
-    realResults.forEach(res => {
+    realResults.forEach((res: any) => {
         const unit = res.worker.businessUnit || 'Sin Unidad' // Handle potential nulls though schema implies string
         if (!buStatsMap.has(unit)) {
             buStatsMap.set(unit, { unit, safe: 0, neutral: 0, unsafe: 0, total: 0 })
@@ -239,7 +239,7 @@ export async function getAnalyticsData(filters?: AnalyticsFilters) {
     const businessUnitStats = Array.from(buStatsMap.values()).sort((a, b) => b.total - a.total)
 
     // Detailed Results for Individual Table
-    const detailedResults = realResults.map(r => ({
+    const detailedResults = realResults.map((r: any) => ({
         id: r.id,
         date: r.worker.testRequest.scheduledFor,
         workerName: r.worker.name || 'Sin Nombre', // Schema might allow nulls? Worker usually has name.
