@@ -1,0 +1,47 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id       String @id @default(uuid())
+  name     String
+  role     String // 'SOLICITANTE' | 'TESTEADOR'
+  requests TestRequest[]
+}
+
+model TestRequest {
+  id            String   @id @default(uuid())
+  createdAt     DateTime @default(now())
+  scheduledFor  DateTime
+  status        String   // 'PENDING', 'COMPLETED'
+  solicitanteId String
+  solicitante   User     @relation(fields: [solicitanteId], references: [id])
+  workers       Worker[]
+}
+
+model Worker {
+  id           String @id @default(uuid())
+  rut          String
+  name         String
+  costCenter   String
+  businessUnit String
+  subArea      String
+  requestId    String
+  testRequest  TestRequest @relation(fields: [requestId], references: [id])
+  result       TestResult?
+}
+
+model TestResult {
+  id        String @id @default(uuid())
+  workerId  String @unique
+  worker    Worker @relation(fields: [workerId], references: [id])
+  status    String // 'UNSAFE', 'NEUTRAL', 'SAFE'
+  isDraft   Boolean @default(true)
+  isHistorical Boolean @default(false)
+  notes     String?
+}
