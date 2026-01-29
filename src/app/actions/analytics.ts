@@ -34,7 +34,7 @@ export async function getFilterOptions(businessUnit?: string, year?: string, mon
     const monthsSet = new Set<string>()
     const daysSet = new Set<string>()
 
-    results.forEach(res => {
+    results.forEach((res: any) => {
         const d = new Date(res.worker.testRequest.scheduledFor)
         const reqYear = d.getFullYear().toString()
         const reqMonth = (d.getMonth() + 1).toString()
