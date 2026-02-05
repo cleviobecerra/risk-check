@@ -23,6 +23,9 @@ model TestRequest {
   solicitanteId String
   solicitante   User     @relation(fields: [solicitanteId], references: [id])
   workers       Worker[]
+
+  @@index([scheduledFor])
+  @@index([solicitanteId])
 }
 
 model Worker {
@@ -35,6 +38,9 @@ model Worker {
   requestId    String
   testRequest  TestRequest @relation(fields: [requestId], references: [id])
   result       TestResult?
+
+  @@index([businessUnit])
+  @@index([subArea])
 }
 
 model TestResult {
@@ -45,4 +51,7 @@ model TestResult {
   isDraft   Boolean @default(true)
   isHistorical Boolean @default(false)
   notes     String?
+
+  @@index([status])
+  @@index([isHistorical])
 }
