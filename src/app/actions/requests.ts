@@ -6,9 +6,11 @@ import * as XLSX from 'xlsx'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 
+import { getSession } from '@/lib/auth'
+
 export async function createRequest(formData: FormData) {
-    const cookieStore = await cookies()
-    const userId = cookieStore.get('userId')?.value
+    const session = await getSession()
+    const userId = session?.userId as string
 
     if (!userId) {
         throw new Error('Unauthorized')

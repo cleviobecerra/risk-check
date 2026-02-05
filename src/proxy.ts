@@ -1,26 +1,42 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { decrypt } from '@/lib/auth'
 
-export function proxy(request: NextRequest) {
-    const userId = request.cookies.get('userId')?.value
-    const userRole = request.cookies.get('userRole')?.value
-    const { pathname } = request.nextUrl
+export async function proxy(request: NextRequest) {
+    const sessionCookie = request.cookies.get('session')?.value
+    const path = request.nextUrl.pathname
 
-    if (!userId) {
+    // Public routes
+    if (path === '/' || path.startsWith('/api') || path.startsWith('/_next') || path.startsWith('/image') || path.startsWith('/favicon.ico')) {
+        return NextResponse.next()
+    }
+
+    if (!sessionCookie) {
         return NextResponse.redirect(new URL('/', request.url))
     }
 
-    if (pathname.startsWith('/dashboard/solicitante') && userRole !== 'SOLICITANTE') {
-        return NextResponse.redirect(new URL('/dashboard/testeador', request.url))
-    }
+    try {
+        const payload = await decrypt(sessionCookie)
+        const role = payload?.role as string
 
-    if (pathname.startsWith('/dashboard/testeador') && userRole !== 'TESTEADOR') {
-        return NextResponse.redirect(new URL('/dashboard/solicitante', request.url))
-    }
+        // Role-based protection
+        if (path.startsWith('/dashboard/admin') && role !== 'ADMIN') {
+            return NextResponse.redirect(new URL('/unauthorized', request.url))
+        }
 
-    return NextResponse.next()
+        if (path.startsWith('/dashboard/testeador') && role === 'SOLICITANTE') {
+            return NextResponse.redirect(new URL('/dashboard/solicitante', request.url))
+        }
+
+        return NextResponse.next()
+    } catch (error) {
+        // Invalid session
+        const response = NextResponse.redirect(new URL('/', request.url))
+        response.cookies.delete('session')
+        return response
+    }
 }
 
 export const config = {
-    matcher: '/dashboard/:path*',
+    matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
 }

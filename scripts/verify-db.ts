@@ -10,6 +10,7 @@ async function main() {
         const user = await prisma.user.create({
             data: {
                 name: 'Test Connectivity User',
+                email: `verify-db-${Date.now()}@example.com`,
                 role: 'TESTEADOR',
             },
         });

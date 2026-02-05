@@ -10,8 +10,10 @@ generator client {
 
 model User {
   id       String @id @default(uuid())
+  email    String @unique
+  password String @default("$2a$10$abcdef...placeholder") // Temporary default to avoid migration failure on existing data
   name     String
-  role     String // 'SOLICITANTE' | 'TESTEADOR'
+  role     String // 'ADMIN', 'SOLICITANTE', 'TESTEADOR'
   requests TestRequest[]
 }
 

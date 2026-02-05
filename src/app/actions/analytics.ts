@@ -1,12 +1,12 @@
 'use server'
 
 import prisma from '@/lib/prisma'
-import { cookies } from 'next/headers'
+import { getSession } from '@/lib/auth'
 
 export async function getFilterOptions(businessUnit?: string, year?: string, month?: string) {
-    const cookieStore = await cookies()
-    const userId = cookieStore.get('userId')?.value
-    const userRole = cookieStore.get('userRole')?.value?.toUpperCase()
+    const session = await getSession()
+    const userId = session?.userId
+    const userRole = session?.role?.toUpperCase()
 
     if (!userId) return { businessUnits: [], subAreas: [], years: [], months: [], days: [] }
 
@@ -95,9 +95,9 @@ interface AnalyticsFilters {
 }
 
 export async function getAnalyticsData(filters?: AnalyticsFilters) {
-    const cookieStore = await cookies()
-    const userId = cookieStore.get('userId')?.value
-    const userRole = cookieStore.get('userRole')?.value
+    const session = await getSession()
+    const userId = session?.userId
+    const userRole = session?.role
 
     if (!userId) return null
 
@@ -278,9 +278,9 @@ export async function getAnalyticsData(filters?: AnalyticsFilters) {
 }
 
 export async function getExportData(filters?: AnalyticsFilters) {
-    const cookieStore = await cookies()
-    const userId = cookieStore.get('userId')?.value
-    const userRole = cookieStore.get('userRole')?.value
+    const session = await getSession()
+    const userId = session?.userId
+    const userRole = session?.role
 
     if (!userId) return null
 
